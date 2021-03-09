@@ -17,7 +17,7 @@ public class SegmentEventListener {
         Throwable ex = null;
         Segment segment = null;
         try {
-            LeafInfo leafInfo = event.getLeafService().getLeafInfo();
+            LeafInfo leafInfo = event.getLeafService().getLeafInfo(event.getTag());
             log.info(" deal res leaf info = {}", leafInfo);
             segment = leafInfoToSegment(leafInfo);
         } catch (Exception e) {

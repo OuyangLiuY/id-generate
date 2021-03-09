@@ -10,6 +10,8 @@ import com.generate.core.segment.policy.FetchPolicy;
 import lombok.extern.slf4j.Slf4j;
 import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
+
 @Slf4j
 public class SegmentBuffer {
 
@@ -33,7 +35,9 @@ public class SegmentBuffer {
 
     static {
         try {
-            UNSAFE = Unsafe.getUnsafe();
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            UNSAFE = (Unsafe) field.get(null);
             STATE_OFFSET = UNSAFE.objectFieldOffset(SegmentBuffer.class.getDeclaredField("state"));
         } catch (Exception e) {
             throw new BizException(e.getMessage(), e);

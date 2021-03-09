@@ -4,6 +4,7 @@ import com.generate.common.exception.BizException;
 import lombok.Data;
 import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -16,7 +17,9 @@ public class Segment {
     private static final Unsafe UNSAFE;
     static {
         try {
-            UNSAFE = Unsafe.getUnsafe();
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            UNSAFE = (Unsafe) field.get(null);
             CUR_ID_OFFSET = UNSAFE.objectFieldOffset(Segment.class.getDeclaredField("curId"));
         }catch (Exception e){
             throw new BizException(e.getMessage(),e);
@@ -47,12 +50,14 @@ public class Segment {
                 break;
             }
         }
+//        System.out.println(Thread.currentThread().getId());
+//        System.out.println(Thread.currentThread().getName());
         return wrapper;
     }
     public BigDecimal getUsedPercent(){
         BigDecimal percent = null;
         if (maxId == 0){
-            percent = new BigDecimal("1.00");
+            percent = new BigDecimal("0.01");
 
         }else {
             percent = new BigDecimal(curId - maxId).divide(new BigDecimal(maxId - minId),3, RoundingMode.UP);

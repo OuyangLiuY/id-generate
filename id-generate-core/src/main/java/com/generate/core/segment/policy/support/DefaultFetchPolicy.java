@@ -25,11 +25,13 @@ public class DefaultFetchPolicy implements FetchPolicy {
 
     @Override
     public int segmentFetchSize(String key) {
-        return segmentProperties.getSegmentFetchSize();
+        //return segmentProperties.getSegmentFetchSize();
+        return 100;
     }
 
     @Override
     public BigDecimal nextSegmentFetchPercent(String key) {
-        return segmentProperties.getNextSegmentFetchPercent();
+        //return segmentProperties.getNextSegmentFetchPercent();
+        return new BigDecimal("0.9");
     }
 }

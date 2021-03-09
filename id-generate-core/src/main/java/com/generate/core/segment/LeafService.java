@@ -4,5 +4,5 @@ import com.generate.core.segment.entity.LeafInfo;
 
 public interface LeafService {
 
-    LeafInfo getLeafInfo();
+    LeafInfo getLeafInfo(String key);
 }
