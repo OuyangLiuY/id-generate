@@ -1,10 +1,12 @@
 package com.generate.core.segment.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
+@ToString
 public class LeafInfo {
     /**
      * 业务标识

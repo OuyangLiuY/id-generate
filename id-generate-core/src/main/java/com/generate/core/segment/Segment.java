@@ -57,10 +57,9 @@ public class Segment {
     public BigDecimal getUsedPercent(){
         BigDecimal percent = null;
         if (maxId == 0){
-            percent = new BigDecimal("0.01");
-
+            percent = new BigDecimal("1.00");
         }else {
-            percent = new BigDecimal(curId - maxId).divide(new BigDecimal(maxId - minId),3, RoundingMode.UP);
+            percent = new BigDecimal(curId - minId).divide(new BigDecimal(maxId - minId),3, RoundingMode.UP);
         }
         return percent;
     }

@@ -13,7 +13,8 @@ public class TestLeafService implements LeafService {
         map.putIfAbsent(tag, 0L);
         leafInfo.setCurId(map.get(tag));
         map.put(tag, map.get(tag));
-        leafInfo.setMaxId(map.get(tag));
+        leafInfo.setMaxId(2000);
+        System.out.println("获取 leafInfo" + leafInfo.toString());
         return leafInfo;
     }
 }
