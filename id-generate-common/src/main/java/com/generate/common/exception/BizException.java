@@ -26,6 +26,10 @@ public class BizException extends RuntimeException{
         this.msg = state.getMsg();
         this.code = state.getCode();
     }
+    public BizException(String msg) {
+        this.msg = msg;
+        this.code = ResultState.FAILED.getCode();
+    }
 
     public BizException(Throwable cause) {
         super(cause);

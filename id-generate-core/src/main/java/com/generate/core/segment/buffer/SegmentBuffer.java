@@ -1,9 +1,9 @@
 package com.generate.core.segment.buffer;
 
 import com.generate.common.exception.BizException;
-import com.generate.core.segment.IdWrapper;
+import com.generate.core.segment.bean.IdWrapper;
 import com.generate.core.segment.LeafService;
-import com.generate.core.segment.Segment;
+import com.generate.core.segment.bean.Segment;
 import com.generate.core.segment.event.SegmentEvent;
 import com.generate.core.segment.event.SegmentEventBus;
 import com.generate.core.segment.policy.FetchPolicy;

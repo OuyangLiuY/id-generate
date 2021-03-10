@@ -1,4 +1,4 @@
-package com.generate.core.segment.entity;
+package com.generate.core.segment.database.entity;
 
 import lombok.Data;
 import lombok.ToString;

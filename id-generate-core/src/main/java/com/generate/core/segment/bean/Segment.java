@@ -1,4 +1,4 @@
-package com.generate.core.segment;
+package com.generate.core.segment.bean;
 
 import com.generate.common.exception.BizException;
 import lombok.Data;

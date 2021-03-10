@@ -1,6 +1,6 @@
 package com.only.core.segment;
 
-import com.generate.core.segment.Segment;
+import com.generate.core.segment.bean.Segment;
 import org.junit.Before;
 import org.junit.Test;
 

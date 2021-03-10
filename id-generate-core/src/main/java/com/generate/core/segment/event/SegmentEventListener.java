@@ -1,9 +1,9 @@
 package com.generate.core.segment.event;
 
 
-import com.generate.core.segment.Segment;
+import com.generate.core.segment.bean.Segment;
 import com.generate.core.segment.buffer.SegmentBuffer;
-import com.generate.core.segment.entity.LeafInfo;
+import com.generate.core.segment.database.entity.LeafInfo;
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
 

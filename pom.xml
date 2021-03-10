@@ -143,6 +143,11 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <version>${micrometer-registry-prometheus.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
