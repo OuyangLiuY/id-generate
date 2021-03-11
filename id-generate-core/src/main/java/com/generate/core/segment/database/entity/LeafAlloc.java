@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @TableName(value = "leaf_alloc")
 public class LeafAlloc {
@@ -34,5 +36,5 @@ public class LeafAlloc {
 
     private String description;
 
-    private Long updateTime;
+    private Date updateTime;
 }

@@ -4,12 +4,15 @@ import com.generate.common.base.Constants;
 import com.generate.common.base.R;
 import com.generate.core.segment.service.IdGenerateService;
 import com.generate.server.segment.bean.SegmentBean;
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
+@Slf4j
 @RestController
+@Validated
 @RequestMapping(value = "generate/id")
 public class IdGenerateController {
 

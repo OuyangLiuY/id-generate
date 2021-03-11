@@ -78,7 +78,7 @@ public class SegmentIdGenerate extends AbstractGenerateLifeCycle implements IdGe
             boolean flag = true;
             try {
                 assert segmentBuffer != null;
-                idWrapper = segmentBuffer.nextId(fetchPolicy.segmentFetchSize(bizTag));
+                idWrapper = segmentBuffer.nextId(fetchPolicy.threadLocalFetchSize(bizTag));
             }catch (Exception e){
                 e.printStackTrace();
                 segmentBufferMap.remove(bizTag);

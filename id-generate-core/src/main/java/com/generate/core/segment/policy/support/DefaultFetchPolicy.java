@@ -15,23 +15,25 @@ public class DefaultFetchPolicy implements FetchPolicy {
 
     @Override
     public boolean threadLocalCacheEnabled() {
-        return segmentProperties.getThreadLocalCacheEnabled();
+        Boolean enabled = segmentProperties.getThreadLocalCacheEnabled();
+        return enabled != null ? enabled : false;
     }
 
     @Override
     public int threadLocalFetchSize(String key) {
-        return segmentProperties.getThreadLocalFetchSize();
+        Integer fetchSize = segmentProperties.getThreadLocalFetchSize();
+        return fetchSize != null ? fetchSize : 10;
     }
 
     @Override
     public int segmentFetchSize(String key) {
-        //return segmentProperties.getSegmentFetchSize();
-        return 100;
+        Integer fetchSize = segmentProperties.getSegmentFetchSize();
+        return fetchSize != null ? fetchSize : 100;
     }
 
     @Override
     public BigDecimal nextSegmentFetchPercent(String key) {
-        //return segmentProperties.getNextSegmentFetchPercent();
-        return new BigDecimal("0.9");
+        BigDecimal percent = segmentProperties.getNextSegmentFetchPercent();
+        return percent != null ? percent : new BigDecimal("0.9");
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class SegmentServiceImpl implements LeafService {
+public class SegmentLeafServiceImpl implements LeafService {
 
     @Autowired
     LeafAllocService leafAllocService;
@@ -43,18 +43,10 @@ public class SegmentServiceImpl implements LeafService {
         Long maxId = info.getMaxId();
         Long newMaxId = step + maxId;
         info.setMaxId(newMaxId);
-        LambdaUpdateWrapper<LeafAlloc> wrapper = new UpdateWrapper<LeafAlloc>().lambda()
-                .eq(LeafAlloc::getSystemId, sysId)
-                .eq(LeafAlloc::getBizTag, bizTag)
-                .eq(LeafAlloc::getMaxId, maxId);
-        boolean update = false;
-        for (int i = Constants.MAX_TRIES; i > 0 && !update; i--) {
-            update = leafAllocService.update(wrapper);
-        }
-        if (!update) {
+
+        if (!update(sysId,bizTag,maxId,info)) {
             throw new BizException("更新失败");
         }
-
         return resultLeafInfo(info, maxId);
     }
 
@@ -65,5 +57,17 @@ public class SegmentServiceImpl implements LeafService {
         leafInfo.setTag(info.getBizTag());
         leafInfo.setDescription(info.getDescription());
         return leafInfo;
+    }
+
+    private boolean update(String sysId, String bizTag,Long maxId,LeafAlloc leafAlloc){
+        LambdaUpdateWrapper<LeafAlloc> wrapper = new UpdateWrapper<LeafAlloc>().lambda()
+                .eq(LeafAlloc::getSystemId, sysId)
+                .eq(LeafAlloc::getBizTag, bizTag)
+                .eq(LeafAlloc::getMaxId, maxId);
+        boolean res = false;
+        for (int i = Constants.MAX_TRIES; i > 0 && !res; i--) {
+            res = leafAllocService.update(leafAlloc,wrapper);
+        }
+        return res;
     }
 }

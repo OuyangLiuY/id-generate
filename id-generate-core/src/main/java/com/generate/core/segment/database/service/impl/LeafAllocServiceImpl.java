@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class LeafAllocServiceImpl extends ServiceImpl<LeafAllocMapper, LeafAlloc> implements LeafAllocService {
+
     @Override
     public ResultWrapper<LeafAlloc> findBySystemIdAndBizTag(String systemId, String bizTag) {
         QueryWrapper<LeafAlloc> queryWrapper = new QueryWrapper<>();
