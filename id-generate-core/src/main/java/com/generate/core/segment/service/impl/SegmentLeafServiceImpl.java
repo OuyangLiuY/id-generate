@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.generate.common.base.Constants;
 import com.generate.common.base.ResultWrapper;
 import com.generate.common.exception.BizException;
-import com.generate.core.segment.LeafService;
+import com.generate.core.LeafService;
 import com.generate.core.segment.database.entity.LeafAlloc;
 import com.generate.core.segment.database.entity.LeafInfo;
 import com.generate.core.segment.database.service.LeafAllocService;

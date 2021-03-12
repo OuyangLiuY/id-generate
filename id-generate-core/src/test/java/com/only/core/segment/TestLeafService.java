@@ -1,6 +1,6 @@
 package com.only.core.segment;
 
-import com.generate.core.segment.LeafService;
+import com.generate.core.LeafService;
 import com.generate.core.segment.database.entity.LeafInfo;
 
 import java.util.HashMap;

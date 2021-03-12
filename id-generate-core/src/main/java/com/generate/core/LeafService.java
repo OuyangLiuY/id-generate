@@ -1,4 +1,4 @@
-package com.generate.core.segment;
+package com.generate.core;
 
 import com.generate.core.segment.database.entity.LeafInfo;
 

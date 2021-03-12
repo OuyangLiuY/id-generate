@@ -2,7 +2,7 @@ package com.generate.core.segment.buffer;
 
 import com.generate.common.exception.BizException;
 import com.generate.core.segment.bean.IdWrapper;
-import com.generate.core.segment.LeafService;
+import com.generate.core.LeafService;
 import com.generate.core.segment.bean.Segment;
 import com.generate.core.segment.event.SegmentEvent;
 import com.generate.core.segment.event.SegmentEventBus;

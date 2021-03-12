@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @ToString
 @Configuration
-@ConfigurationProperties(prefix = "id-generate.properties")
+@ConfigurationProperties(prefix = "id-generate.segment")
 public class SegmentProperties {
 
     private BigDecimal nextSegmentFetchPercent;

@@ -1,6 +1,6 @@
 package com.generate.server.segment;
 
-import com.generate.core.segment.LeafService;
+import com.generate.core.LeafService;
 import com.generate.core.segment.event.SegmentEventBus;
 import com.generate.core.segment.policy.FetchPolicy;
 import com.generate.core.segment.service.IdGenerateService;

@@ -2,8 +2,8 @@ package com.generate.core.segment.support;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import com.generate.common.lifecycle.AbstractGenerateLifeCycle;
-import com.generate.core.segment.IdGenerate;
-import com.generate.core.segment.LeafService;
+import com.generate.core.IdGenerate;
+import com.generate.core.LeafService;
 import com.generate.core.segment.bean.IdWrapper;
 import com.generate.core.segment.buffer.SegmentBuffer;
 import com.generate.core.segment.cache.EnhanceThreadLocal;

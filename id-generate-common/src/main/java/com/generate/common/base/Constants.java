@@ -24,4 +24,5 @@ public interface Constants {
 	 * 失败最大重试次数
 	 */
 	int MAX_TRIES = 3;
+	long SNOWFLAKE_DEFAULT_EPOCH = 1218124800000L;
 }

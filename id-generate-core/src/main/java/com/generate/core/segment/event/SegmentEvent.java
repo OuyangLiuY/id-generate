@@ -1,6 +1,6 @@
 package com.generate.core.segment.event;
 
-import com.generate.core.segment.LeafService;
+import com.generate.core.LeafService;
 import com.generate.core.segment.buffer.SegmentBuffer;
 import lombok.Data;
 
