@@ -7,12 +7,14 @@ import com.generate.core.segment.service.IdGenerateService;
 import com.generate.core.segment.support.SegmentIdGenerate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
 @Slf4j
-@Service
+@Service("SegmentService")
+@ConditionalOnProperty(prefix = "id.generate",name = "segment",havingValue = "true")
 public class SegmentServiceImpl implements IdGenerateService {
 
     @Autowired

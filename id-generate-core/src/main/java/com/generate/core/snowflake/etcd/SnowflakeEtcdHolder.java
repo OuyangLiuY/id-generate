@@ -13,6 +13,7 @@ import io.etcd.jetcd.kv.PutResponse;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +31,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
 
     private static final String SERVER_TIME_API = "/generator/id/api/time";
@@ -63,6 +65,7 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
 
     @Override
     protected void doInit() {
+        log.info("snowflake do init...");
         KV kvClient = this.client.getKVClient();
         try {
             ByteSequence rootNode = ByteSequence.from(snowflakeProperties.getPathForever(), StandardCharsets.UTF_8);
@@ -172,13 +175,12 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
         }).map(kv -> {
             String value = kv.getValue().toString(StandardCharsets.UTF_8);
             EndPointData endPointData = gson.fromJson(value, EndPointData.class);
-            String url = "http://" + endPointData.getIp() + ":" + endPointData.getPort() + SERVER_TIME_API;
-            return url;
+            return "http://" + endPointData.getIp() + ":" + endPointData.getPort() + SERVER_TIME_API;
         }).collect(Collectors.toList());
 
         log.info("在线节点信息: " + urls);
 
-        if (urls == null || urls.size() == 0) {
+        if (urls.size() == 0) {
             return;
         }
 
@@ -197,15 +199,16 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
                 serverTime = serverTime.substring(0, serverTime.length() - 7);
             }
             return Long.parseLong(serverTime) - oneWayCost - start;
-        }).collect(Collectors.toList()).stream().mapToLong(v -> v.longValue()).average().getAsDouble();
+        }).collect(Collectors.toList()).stream().mapToLong(v -> v).average().getAsDouble();
 
         // 时间差绝对值
-        Double absSubTime = Math.abs(differTime);
+        double absSubTime = Math.abs(differTime);
         log.info("当前服务器系统时间与其他线上ID服务器的系统均值时间差: " + absSubTime + "ms");
 
         // 如果大于阈值
-        if (absSubTime.longValue() > snowflakeProperties.getBlockBackThreshold()) {
+        if (absSubTime > snowflakeProperties.getBlockBackThreshold()) {
             //snowflakeIdGenerate.getNotifyService().notify(NotifyContext.builder().data(snowFlakeIdGenerator).msg("服务器节点之间存在时钟不同步问题，请检查重试,节点信息:" + gson.toJson(urls)).build());
+            log.info("服务器节点之间存在时钟不同步问题，请检查重试,节点信息:" + gson.toJson(urls));
         }
     }
 
@@ -297,7 +300,7 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
         return uniqueForeverPath;
     }
 
-    private void createTmpNode(String tmpPath, String data) {
+    private void createTmpNode(String tmpPath, String data) throws ExecutionException, InterruptedException {
         // 创建临时节点续约，创建Lease客户端
         KV kvClient = client.getKVClient();
         Lease leaseClient = client.getLeaseClient();
@@ -308,7 +311,18 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
         } catch (Exception e) {
             throw new BizException("create lease id failed", e);
         }
-
+        // 启用线程去周期性续约，当 worker节点死掉，会自动断开连接
+        new ScheduledThreadPoolExecutor(1, (run) -> {
+            Thread thread = new Thread(run, "bx-schedule-keepAlive-node");
+            thread.setDaemon(true);
+            return thread;
+            // SNOWFLAKE_KEEPALIVE_INTERVAL_VALUE
+        }).scheduleAtFixedRate(new LeaseClientTask(leaseClient, leaseId), 1, snowflakeProperties.getKeepAliveInterval(), TimeUnit.MILLISECONDS);
+        ByteSequence uniqueTempKey = ByteSequence.from(tmpPath, StandardCharsets.UTF_8);
+        ByteSequence uniqueTempValue = ByteSequence.from(data, StandardCharsets.UTF_8);
+        // 创建节点添加租约，服务器节点挂掉后，因没法续租，该节点路径会失效
+        kvClient.put(uniqueTempKey, uniqueTempValue, PutOption.newBuilder().withLeaseId(leaseId).build()).get();
+        log.info("create etcd temp node success, path is {} ", tmpPath);
     }
 
     private String buildEndPointJsonData() {
@@ -318,12 +332,12 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
 
     @Override
     protected void doStart() {
-
+        log.info("snowflake do start...");
     }
 
     @Override
     protected void doStop() {
-
+        log.info("snowflake do stop...");
     }
 
     public String getPropPath() {
@@ -334,22 +348,6 @@ public class SnowflakeEtcdHolder extends AbstractGenerateLifeCycle {
     @Override
     public String getName() {
         return null;
-    }
-
-    class LeaseClientTask implements Runnable {
-        private final Lease lease;
-        private final Long leaseId;
-
-        public LeaseClientTask(Lease lease, Long leaseId) {
-            this.lease = lease;
-            this.leaseId = leaseId;
-        }
-
-        @Override
-        public void run() {
-            log.info("续约任务线程开始执行...");
-            lease.keepAliveOnce(leaseId);
-        }
     }
 
 }
