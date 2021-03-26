@@ -15,9 +15,6 @@ public class EtcdLockData {
     private String lockPath;
     final AtomicInteger lockCount = new AtomicInteger(1);
 
-    public EtcdLockData (){
-    }
-
     public EtcdLockData(Thread owningThread, String lockPath)
     {
         this.owningThread = owningThread;

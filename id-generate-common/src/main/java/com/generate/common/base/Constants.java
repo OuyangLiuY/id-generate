@@ -25,4 +25,9 @@ public interface Constants {
 	 */
 	int MAX_TRIES = 3;
 	long SNOWFLAKE_DEFAULT_EPOCH = 1218124800000L;
+	String ID_PRE = "/id/";
+
+	static String getETCDKeyBySystemId(String key) {
+		return  ID_PRE + key;
+	}
 }

@@ -1,6 +1,5 @@
 package com.generate.core.snowflake.lock;
 
-import com.generate.common.exception.BizException;
 import com.generate.common.exception.LockException;
 import com.generate.core.snowflake.etcd.LeaseClientTask;
 import com.google.common.collect.Maps;
@@ -13,18 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class EtcdDistributeLock extends AbstractLock {
 
     private Client client;
     private Lease lease;
-    private Lock lock;
-    private String  lockKey;
+    private final Lock lock;
+    private final String  lockKey;
     private String lockPath;
-    private AtomicInteger lockCount;
-    private long leaseTTl;
+    private final long leaseTTl;
     private long initDelay = 0L;
     ScheduledExecutorService executor;
     private final ConcurrentMap<Thread,EtcdLockData> cache = Maps.newConcurrentMap();
@@ -42,6 +39,7 @@ public class EtcdDistributeLock extends AbstractLock {
         Thread currentThread = Thread.currentThread();
         EtcdLockData etcdLockData = cache.get(currentThread);
         if(etcdLockData != null && etcdLockData.isLockSuccess()){
+            // re enter 锁重入
             int count = etcdLockData.lockCount.incrementAndGet();
             if(count < 0){
                 throw new LockException("超出可以重入次数错误");
